@@ -1,0 +1,122 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Job {
+    private String jobTitle;
+    private String company;
+    private String location;
+    private String description;
+
+    // Constructor
+    public Job(String jobTitle, String company, String location, String description) {
+        this.jobTitle = jobTitle;
+        this.company = company;
+        this.location = location;
+        this.description = description;
+    }
+
+    // Getters
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public String getDetails() {
+        return "Job Title: " + jobTitle + "\nCompany: " + company + "\nLocation: " + location + "\nDescription: " + description;
+    }
+}
+
+class User {
+    private String username;
+    private String role; // Can be "Job Seeker" or "Employer"
+
+    // Constructor
+    public User(String username, String role) {
+        this.username = username;
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+}
+
+public class JobPortal {
+
+    // Attributes
+    private String portalName;
+    private String adminEmail;
+    private List<User> registeredUsers;
+    private List<Job> jobListings;
+
+    // Constructor
+    public JobPortal(String portalName, String adminEmail) {
+        this.portalName = portalName;
+        this.adminEmail = adminEmail;
+        this.registeredUsers = new ArrayList<>();
+        this.jobListings = new ArrayList<>();
+        System.out.println(portalName + " initialized successfully!");
+    }
+
+    // Register a user
+    public void registerUser(String username, String role) {
+        User user = new User(username, role);
+        registeredUsers.add(user);
+        System.out.println("User " + username + " registered as " + role + " successfully!");
+    }
+
+    // Add a job
+    public void addJob(String jobTitle, String company, String location, String description) {
+        Job job = new Job(jobTitle, company, location, description);
+        jobListings.add(job);
+        System.out.println("Job '" + jobTitle + "' added successfully!");
+    }
+
+    // Login method
+    public boolean loginUser(String username) {
+        for (User user : registeredUsers) {
+            if (user.getUsername().equals(username)) {
+                System.out.println("Welcome back, " + username + "!");
+                return true;
+            }
+        }
+        System.out.println("User not found. Please register.");
+        return false;
+    }
+
+    // Display all job listings
+    public void displayJobs() {
+        System.out.println("Available Jobs:");
+        for (Job job : jobListings) {
+            System.out.println(job.getDetails());
+            System.out.println("---------------------------");
+        }
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Initialize the job portal
+        JobPortal myJobPortal = new JobPortal("MyJobPortal", "admin@myjobportal.com");
+
+        // Sample users and jobs
+        myJobPortal.registerUser("Alice", "Job Seeker");
+        myJobPortal.registerUser("Bob", "Employer");
+
+        myJobPortal.addJob("Software Engineer", "TechCorp", "New York", "Develop and maintain software applications.");
+        myJobPortal.addJob("Product Manager", "InnovateInc", "San Francisco", "Oversee product lifecycle from ideation to launch.");
+
+        // Login functionality
+        System.out.print("Enter username to login: ");
+        String username = scanner.nextLine();
+        if (myJobPortal.loginUser(username)) {
+            myJobPortal.displayJobs();
+        }
+        scanner.close();
+    }
+}
