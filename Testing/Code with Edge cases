@@ -1,0 +1,161 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Job {
+    private String jobTitle;
+    private String company;
+    private String location;
+    private String description;
+
+    // Constructor
+    public Job(String jobTitle, String company, String location, String description) {
+        this.jobTitle = jobTitle;
+        this.company = company;
+        this.location = location;
+        this.description = description;
+    }
+
+    // Getters
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public String getDetails() {
+        return "Job Title: " + jobTitle + "\nCompany: " + company + "\nLocation: " + location + "\nDescription: " + description;
+    }
+}
+
+class User {
+    private String username;
+    private String role; // Can be "Job Seeker" or "Employer"
+
+    // Constructor
+    public User(String username, String role) {
+        this.username = username;
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+}
+
+public class JobPortal {
+
+    // Attributes
+    private String portalName;
+    private String adminEmail;
+    private List<User> registeredUsers;
+    private List<Job> jobListings;
+
+    // Constructor
+    public JobPortal(String portalName, String adminEmail) {
+        this.portalName = portalName;
+        this.adminEmail = adminEmail;
+        this.registeredUsers = new ArrayList<>();
+        this.jobListings = new ArrayList<>();
+        System.out.println(portalName + " initialized successfully!");
+    }
+
+    // Register a user
+    public void registerUser(String username, String role) {
+        if (username == null || username.isEmpty() || role == null || role.isEmpty()) {
+            System.out.println("Username or role cannot be empty.");
+            return;
+        }
+
+        for (User user : registeredUsers) {
+            if (user.getUsername().equals(username)) {
+                System.out.println("User " + username + " is already registered.");
+                return;
+            }
+        }
+
+        User user = new User(username, role);
+        registeredUsers.add(user);
+        System.out.println("User " + username + " registered as " + role + " successfully!");
+    }
+
+    // Add a job
+    public void addJob(String jobTitle, String company, String location, String description) {
+        if (jobTitle == null || jobTitle.isEmpty() || company == null || company.isEmpty() || location == null || location.isEmpty()) {
+            System.out.println("Job title, company, or location cannot be empty.");
+            return;
+        }
+
+        Job job = new Job(jobTitle, company, location, description);
+        jobListings.add(job);
+        System.out.println("Job '" + jobTitle + "' added successfully!");
+    }
+
+    // Login method
+    public boolean loginUser(String username) {
+        if (username == null || username.isEmpty()) {
+            System.out.println("Username cannot be empty.");
+            return false;
+        }
+
+        for (User user : registeredUsers) {
+            if (user.getUsername().equals(username)) {
+                System.out.println("Welcome back, " + username + "!");
+                return true;
+            }
+        }
+        System.out.println("User not found. Please register.");
+        return false;
+    }
+
+    // Display all job listings
+    public void displayJobs() {
+        if (jobListings.isEmpty()) {
+            System.out.println("No job listings available.");
+            return;
+        }
+
+        System.out.println("Available Jobs:");
+        for (Job job : jobListings) {
+            System.out.println(job.getDetails());
+            System.out.println("---------------------------");
+        }
+    }
+
+    // Main method for testing
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Initialize the job portal
+        JobPortal myJobPortal = new JobPortal("MyJobPortal", "admin@myjobportal.com");
+
+        // Test User Registration
+        myJobPortal.registerUser("Alice", "Job Seeker");  // Valid registration
+        myJobPortal.registerUser("Bob", "Employer");     // Valid registration
+        myJobPortal.registerUser("", "");                 // Invalid: empty username and role
+        myJobPortal.registerUser("Alice", "Employer");    // Invalid: duplicate username
+
+        // Test Job Addition
+        myJobPortal.addJob("Software Engineer", "TechCorp", "New York", "Develop and maintain software applications."); // Valid job
+        myJobPortal.addJob("", "TechCorp", "New York", ""); // Invalid: empty job title and description
+        myJobPortal.addJob("Product Manager", "", "San Francisco", ""); // Invalid: empty company
+
+        // Test User Login
+        System.out.print("Enter username to login: ");
+        String username = scanner.nextLine();
+        if (myJobPortal.loginUser(username)) {
+            myJobPortal.displayJobs();  // Display jobs if login is successful
+        }
+
+        // Test invalid login
+        myJobPortal.loginUser("");  // Invalid: empty username
+        myJobPortal.loginUser("NonExistentUser");  // Invalid: non-existent user
+
+        // Display Jobs
+        myJobPortal.displayJobs();  // Display jobs after login
+
+        scanner.close();
+    }
+}
