@@ -1,0 +1,37 @@
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class JobPortalIntegrationTest {
+
+    private JobPortal jobPortal;
+
+    @BeforeEach
+    public void setUp() {
+        jobPortal = new JobPortal("MyJobPortal", "admin@myjobportal.com");
+    }
+
+    // Integration test: Register a user, add a job, then login and view jobs
+    @Test
+    public void testUserJobFlow() {
+        // Register user
+        jobPortal.registerUser("Alice", "Job Seeker");
+
+        // Add job
+        jobPortal.addJob("Software Engineer", "TechCorp", "New York", "Develop and maintain software applications.");
+
+        // Login user
+        boolean loginResult = jobPortal.loginUser("Alice");
+        assertTrue(loginResult);
+
+        // Display jobs
+        jobPortal.displayJobs(); // Check that the job is displayed
+    }
+
+    // Test Edge Case: Login after no users are registered
+    @Test
+    public void testLoginNoUsers() {
+        boolean loginResult = jobPortal.loginUser("NonExistentUser");
+        assertFalse(loginResult); // Login should fail because no users are registered
+    }
+}
